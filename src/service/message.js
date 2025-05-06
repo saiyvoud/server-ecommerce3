@@ -3,5 +3,6 @@ export const SMessage = { // Success Message
 }
 export const EMessage = { // Error Message 
     BadRequest: "Bad Request",
+    NotFound: "Not Found",
     ServerInternal: "Error SeverInternal"
 }

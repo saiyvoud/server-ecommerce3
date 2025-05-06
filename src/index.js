@@ -1,6 +1,5 @@
 import express from "express"; // ຂຽນແບບ ES 
 import cors from "cors";
-import './config/db_mysql.js'
 import router from "./router/index.js";
 const app = express();
 app.use(cors());

@@ -13,8 +13,86 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  user_id     String    @id @default(uuid()) @db.VarChar(36)
+  username    String
+  email       String    @unique
+  password    String
+  phoneNumber Int
+  role        String   @default("general")
+  profile     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Order       Order[]
+  Address     Address[]
+}
+
+model Banner {
+  banner_id String   @id @default(uuid()) @db.VarChar(36)
+  title     String?
+  detail    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  category_id  String    @id @default(uuid()) @db.VarChar(36)
+  categoryName String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  Product      Product[]
+}
+
+model Product {
+  product_id  String        @id @default(uuid()) @db.VarChar(36)
+  categoryId  String        @db.VarChar(36)
+  category    Category      @relation(fields: [categoryId], references: [category_id])
+  proName     String
+  proDetail   String
+  proAmount   Int
+  proPrice    Int
+  proImage    String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  OrderDetail OrderDetail[]
+}
+
+model Address {
+  address_id        String   @id @default(uuid()) @db.VarChar(36)
+  userId            String   @db.VarChar(36)
+  user              User     @relation(fields: [userId], references: [user_id])
+  express           String
+  village           String
+  district          String
+  province          String
+  destinationNumber Int
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  Order             Order[]
+}
+
+model Order {
+  order_id    String        @id @default(uuid()) @db.VarChar(36)
+  userId      String        @db.VarChar(36)
+  user        User          @relation(fields: [userId], references: [user_id])
+  addressId   String        @db.VarChar(36)
+  address     Address       @relation(fields: [addressId], references: [address_id])
+  totalPrice  Int
+  status      String        @default("await")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  OrderDetail OrderDetail[]
+}
+
+model OrderDetail {
+  order_detail_id String   @id @default(uuid()) @db.VarChar(36)
+  orderId         String   @db.VarChar(36)
+  order           Order    @relation(fields: [orderId], references: [order_id])
+  productId       String   @db.VarChar(36)
+  product         Product  @relation(fields: [productId], references: [product_id])
+  amount          Int
+  total           Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
