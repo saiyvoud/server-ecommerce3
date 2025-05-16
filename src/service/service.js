@@ -38,7 +38,50 @@ export const FindOneEmail = async (email) => {
         }
     })
 }
-
+export const FindOneUserId = async (user_id) => {
+    return new Promise(async (resovle, reject) => {
+        try {
+            const prisma = new PrismaClient();
+            const data = await prisma.user.findFirst({ where: { user_id: user_id } });
+            if (!data) {
+                return reject("User Not Found")
+            }
+            return resovle(data);
+        } catch (error) {
+            return reject(error)
+        }
+    })
+}
+export const VerifyToken = async (token) => {
+    return new Promise(async (resovle, reject) => {
+        try {
+            jwt.verify(token, SECREAT_KEY, async (err, decode) => {
+                if (err) return reject(err);
+                const prisma = new PrismaClient();
+                const data = await prisma.user.findFirst({ where: { user_id: decode.id } });
+                if (!data) return reject(EMessage.NotFound);
+                return resovle(data);
+            });
+        } catch (error) {
+            return reject(error);
+        }
+    })
+}
+export const VerifyRefreshToken = async (refreshToken) => {
+    return new Promise(async (resovle, reject) => {
+        try {
+            jwt.verify(refreshToken, SECREAT_KEY_REFRESH, async (err, decode) => {
+                if (err) return reject(err);
+                const prisma = new PrismaClient();
+                const data = await prisma.user.findFirst({ where: { user_id: decode.id } });
+                if (!data) return reject(EMessage.NotFound);
+                return resovle(data);
+            });
+        } catch (error) {
+            return reject(error);
+        }
+    })
+}
 export const GenerateToken = async (data) => {
     return new Promise(async (resovle, reject) => {
         try {

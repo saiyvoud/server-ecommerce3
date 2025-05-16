@@ -1,8 +1,10 @@
 import express from "express"; // ຂຽນແບບ ES 
 import cors from "cors";
 import router from "./router/index.js";
+import fileUpload from "express-fileupload";
 const app = express();
 app.use(cors());
+app.use(fileUpload());
 app.use(express.json({ extended: true }))
 app.use(express.urlencoded({
    extended: true,
