@@ -38,6 +38,34 @@ export const FindOneEmail = async (email) => {
         }
     })
 }
+export const FindOneCategory = async (category_id) => {
+    return new Promise(async (resovle, reject) => {
+        try {
+            const prisma = new PrismaClient();
+            const data = await prisma.category.findFirst({ where: { category_id: category_id } });
+            if (!data) {
+                return reject("User Not Found")
+            }
+            return resovle(data);
+        } catch (error) {
+            return reject(error)
+        }
+    })
+}
+export const FindOneProduct = async (product_id) => {
+    return new Promise(async (resovle, reject) => {
+        try {
+            const prisma = new PrismaClient();
+            const data = await prisma.product.findFirst({ where: { product_id: product_id } });
+            if (!data) {
+                return reject("User Not Found")
+            }
+            return resovle(data);
+        } catch (error) {
+            return reject(error)
+        }
+    })
+}
 export const FindOneUserId = async (user_id) => {
     return new Promise(async (resovle, reject) => {
         try {

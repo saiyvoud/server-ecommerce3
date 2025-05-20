@@ -28,6 +28,7 @@ export default class UserController {
         }
     }
 
+
     static async Login(req, res) {
         try {
             const { email, password } = req.body;
@@ -184,6 +185,7 @@ export default class UserController {
             return SendError(res, 500, EMessage.ServerInternal, error);
         }
     }
+    
     static async DeleteUserOne(req, res) {
         try {
             const user_id = req.params.user_id
