@@ -3,6 +3,21 @@ import { EMessage, SMessage } from "../service/message.js";
 import { SendCreate, SendSuccess, SendError } from "../service/response.js";
 import { FindOneCategory } from "../service/service.js";
 export default class ProductController {
+    static async SearchProduct(req, res) {
+        try {
+            const search = req.query.search;
+            const prisma = new PrismaClient();
+            const data = await prisma.product.findMany({
+                where: {
+                    proName: { contains: search }
+                }
+            });
+            if (!data) return SendError(res, 404, EMessage.NotFound);
+            return SendSuccess(res, SMessage.Search, data);
+        } catch (error) {
+            return SendError(res, 500, EMessage.ServerInternal, error)
+        }
+    }
     static async SelectAll(req, res) {
         try {
             const prisma = new PrismaClient();
@@ -18,6 +33,17 @@ export default class ProductController {
             const product_id = req.params.product_id;
             const prisma = new PrismaClient();
             const data = await prisma.product.findFirst({ where: { product_id: product_id } });
+            if (!data) return SendError(res, 404, EMessage.NotFound);
+            return SendSuccess(res, SMessage.SelectOne, data);
+        } catch (error) {
+            return SendError(res, 500, EMessage.ServerInternal, error)
+        }
+    }
+    static async SelectBy(req, res) {
+        try {
+            const categoryId = req.params.categoryId;
+            const prisma = new PrismaClient();
+            const data = await prisma.product.findMany({ where: { categoryId: categoryId } });
             if (!data) return SendError(res, 404, EMessage.NotFound);
             return SendSuccess(res, SMessage.SelectOne, data);
         } catch (error) {

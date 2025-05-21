@@ -79,6 +79,7 @@ model Order {
   addressId   String        @db.VarChar(36)
   address     Address       @relation(fields: [addressId], references: [address_id])
   totalPrice  Int
+  bill        String?
   status      String        @default("await")
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

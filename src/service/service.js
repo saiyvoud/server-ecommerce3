@@ -44,7 +44,7 @@ export const FindOneCategory = async (category_id) => {
             const prisma = new PrismaClient();
             const data = await prisma.category.findFirst({ where: { category_id: category_id } });
             if (!data) {
-                return reject("User Not Found")
+                return reject("Category Not Found")
             }
             return resovle(data);
         } catch (error) {
@@ -58,7 +58,35 @@ export const FindOneProduct = async (product_id) => {
             const prisma = new PrismaClient();
             const data = await prisma.product.findFirst({ where: { product_id: product_id } });
             if (!data) {
-                return reject("User Not Found")
+                return reject("Product Not Found")
+            }
+            return resovle(data);
+        } catch (error) {
+            return reject(error)
+        }
+    })
+}
+export const FindOneOrder = async (orderId) => {
+    return new Promise(async (resovle, reject) => {
+        try {
+            const prisma = new PrismaClient();
+            const data = await prisma.order.findFirst({ where: { orderId: orderId } });
+            if (!data) {
+                return reject("Order Not Found")
+            }
+            return resovle(data);
+        } catch (error) {
+            return reject(error)
+        }
+    })
+}
+export const FindOneAddressId = async (address_id) => {
+    return new Promise(async (resovle, reject) => {
+        try {
+            const prisma = new PrismaClient();
+            const data = await prisma.address.findFirst({ where: { address_id: address_id } });
+            if (!data) {
+                return reject("Address Not Found")
             }
             return resovle(data);
         } catch (error) {

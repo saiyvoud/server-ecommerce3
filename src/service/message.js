@@ -1,3 +1,9 @@
+export const OrderStatus = {
+    await: "await",
+    padding: "padding",
+    success: "success",
+    cancel: "cancel",
+}
 export const SMessage = { // Success Message
     Register: "Register Success",
     Login: "Login Success",
@@ -8,6 +14,7 @@ export const SMessage = { // Success Message
     ChangePassword: "Change Password Success",
     SelectAll: "Select All Success",
     SelectOne: "Select One Success",
+    Search: "Search Success",
     Refresh: "Refresh Success",
 }
 export const EMessage = { // Error Message 
