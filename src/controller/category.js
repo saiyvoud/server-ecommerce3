@@ -1,6 +1,7 @@
 import { ValidateData } from "../service/validate.js";
 import { EMessage, SMessage } from "../service/message.js";
 import { SendCreate,SendSuccess, SendError } from "../service/response.js";
+import { PrismaClient } from "@prisma/client";
 export default class CategoryController {
     static async SelectAll(req, res) {
         try {
@@ -28,7 +29,7 @@ export default class CategoryController {
             const { categoryName} = req.body;
             const validate = await ValidateData({ categoryName});
             if (validate.length > 0) {
-                return SendError(res, 400, EMessage.BadRequest, validate.join("."))
+                return SendError(res, 400, EMessage.BadRequest, validate.join(","))
             }
          
             const prisma = new PrismaClient();

@@ -2,6 +2,8 @@ import { ValidateData } from "../service/validate.js";
 import { EMessage, SMessage } from "../service/message.js";
 import { SendCreate, SendSuccess, SendError } from "../service/response.js";
 import { FindOneCategory } from "../service/service.js";
+import { PrismaClient } from "@prisma/client";
+import { UploadImageToCloud } from "../config/cloudinary.js";
 export default class ProductController {
     static async SearchProduct(req, res) {
         try {
@@ -45,7 +47,7 @@ export default class ProductController {
             const prisma = new PrismaClient();
             const data = await prisma.product.findMany({ where: { categoryId: categoryId } });
             if (!data) return SendError(res, 404, EMessage.NotFound);
-            return SendSuccess(res, SMessage.SelectOne, data);
+            return SendSuccess(res, SMessage.SelectBy, data);
         } catch (error) {
             return SendError(res, 500, EMessage.ServerInternal, error)
         }
@@ -55,14 +57,14 @@ export default class ProductController {
             const { proName, proDetail, proAmount, proPrice, categoryId } = req.body;
             const validate = await ValidateData({ proName, proDetail, proAmount, proPrice, categoryId });
             if (validate.length > 0) {
-                return SendError(res, 400, EMessage.BadRequest, validate.join("."))
+                return SendError(res, 400, EMessage.BadRequest, validate.join(","))
             }
             await FindOneCategory(categoryId) // ສ້າງຢູ່ໃນ folder service file service
             const image = req.files;
             if (!image || !image.files) {
                 return SendError(res, 400, EMessage.BadRequest, "Files")
             }
-            const img_url = await UploadImageToCloud(image.files.data, image.files.mimeType);
+            const img_url = await UploadImageToCloud(image.files.data, image.files.mimetype);
             if (!img_url) {
                 return SendError(res, 404, EMessage.EUpload);
             }
@@ -71,8 +73,8 @@ export default class ProductController {
                 data: {
                     proName,
                     proDetail,
-                    proAmount,
-                    proPrice,
+                    proAmount: parseInt(proAmount),
+                    proPrice: parseInt(proPrice),
                     categoryId,
                     proImage: img_url
                 }
@@ -80,6 +82,7 @@ export default class ProductController {
             if (!data) return SendError(res, 404, EMessage.EInsert)
             return SendCreate(res, SMessage.Insert, data);
         } catch (error) {
+            console.log(error);
             return SendError(res, 500, EMessage.ServerInternal, error)
         }
     }
@@ -97,7 +100,7 @@ export default class ProductController {
             if (!image || !image.files) {
                 return SendError(res, 400, EMessage.BadRequest, "Files")
             }
-            const img_url = await UploadImageToCloud(image.files.data, image.files.mimeType);
+            const img_url = await UploadImageToCloud(image.files.data, image.files.mimetype);
             if (!img_url) {
                 return SendError(res, 404, EMessage.EUpload);
             }
@@ -106,8 +109,8 @@ export default class ProductController {
                 data: {
                     proName,
                     proDetail,
-                    proAmount,
-                    proPrice,
+                    proAmount: parseInt(proAmount),
+                    proPrice: parseInt(proPrice),
                     categoryId,
                     proImage: img_url
                 }, where: { product_id: product_id }

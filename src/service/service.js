@@ -70,7 +70,7 @@ export const FindOneOrder = async (orderId) => {
     return new Promise(async (resovle, reject) => {
         try {
             const prisma = new PrismaClient();
-            const data = await prisma.order.findFirst({ where: { orderId: orderId } });
+            const data = await prisma.order.findFirst({ where: { order_id: orderId } });
             if (!data) {
                 return reject("Order Not Found")
             }

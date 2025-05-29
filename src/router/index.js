@@ -48,13 +48,14 @@ router.delete("/address/delete/:address_id", auth, AddressController.DeleteAddre
 router.post("/order/insert", auth, OrderController.Insert);
 router.get("/order/selAll", OrderController.SelectAll);
 router.get("/order/selOne/:order_id", OrderController.SelectOne);
-router.get("/order/selBy", OrderController.SelectBy);
+router.get("/order/selBy", auth, OrderController.SelectBy);
+router.get("/order/selByUser", auth,OrderController.SelectByUser);
 router.put("/order/updateStatus/:order_id", auth, OrderController.UpdateStatus);
 router.delete("/order/delete/:order_id", auth, OrderController.DeleteOrder);
 //------ order Detail ----
 router.post("/orderDetail/insert", auth,  OrderDetailController.Insert);
 router.get("/orderDetail/selAll",  OrderDetailController.SelectAll);
-router.get("/orderDetail/selOne/:order_id",  OrderDetailController.SelectOne);
-router.get("/orderDetail/selBy",  OrderDetailController.SelectBy);
-router.delete("/orderDetail/delete/:order_id", auth,  OrderDetailController.DeleteOrderDetail);
+router.get("/orderDetail/selOne/:order_detail_id",  OrderDetailController.SelectOne);
+router.get("/orderDetail/selBy/:order_id",  OrderDetailController.SelectBy);
+router.delete("/orderDetail/delete/:order_detail_id", auth,  OrderDetailController.DeleteOrderDetail);
 export default router;

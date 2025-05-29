@@ -21,7 +21,7 @@ export const UploadImageToCloud = async (files, type, oldImg) => {
       });
       return cloudinaryUpload.url;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       return "";
     }
   };

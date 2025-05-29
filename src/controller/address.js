@@ -2,6 +2,7 @@ import { ValidateData } from "../service/validate.js";
 import { EMessage, SMessage } from "../service/message.js";
 import { SendCreate, SendSuccess, SendError } from "../service/response.js";
 import { FindOneUserId } from "../service/service.js";
+import { PrismaClient } from "@prisma/client";
 export default class AddressController {
     static async SelectAll(req, res) {
         try {
@@ -26,15 +27,20 @@ export default class AddressController {
     }
     static async Insert(req, res) {
         try {
-            const { userId, express, village, district, province, destinationNumber } = req.body;
-            const validate = await ValidateData({ userId, express, village, district, province, destinationNumber });
+            const userId = req.user;
+            const { express, village, district, province, destinationNumber } = req.body;
+            const validate = await ValidateData({ express, village, district, province, destinationNumber });
             if (validate.length > 0) {
-                return SendError(res, 400, EMessage.BadRequest, validate.join("."))
+                return SendError(res, 400, EMessage.BadRequest, validate.join(","))
             }
             await FindOneUserId(userId);
             const prisma = new PrismaClient();
-            const data = await prisma.address.create({ data: { userId, express, village,
-                 district, province, destinationNumber } });
+            const data = await prisma.address.create({
+                data: {
+                    userId, express, village,
+                    district, province, destinationNumber: parseInt(destinationNumber)
+                }
+            });
             return SendCreate(res, SMessage.Insert, data);
         } catch (error) {
             return SendError(res, 500, EMessage.ServerInternal, error)
@@ -43,9 +49,10 @@ export default class AddressController {
     static async UpdateAddress(req, res) {
         try {
             const address_id = req.params.address_id;
+            const userId = req.user;
             if (!address_id) return SendError(res, 400, EMessage.BadRequest);
-            const { userId, express, village, district, province, destinationNumber } = req.body;
-            const validate = await ValidateData({ userId, express, village, district, province, destinationNumber });
+            const { express, village, district, province, destinationNumber } = req.body;
+            const validate = await ValidateData({ express, village, district, province, destinationNumber });
             if (validate.length > 0) {
                 return SendError(res, 400, EMessage.BadRequest, validate.join("."))
             }
@@ -53,7 +60,8 @@ export default class AddressController {
             const prisma = new PrismaClient();
             await prisma.address.updateMany({
                 data: {
-                    userId, express, village, district, province, destinationNumber
+                    userId, express, village, district,
+                    province, destinationNumber: parseInt(destinationNumber)
                 }, where: { address_id: address_id }
             })
             return SendSuccess(res, SMessage.Update);
