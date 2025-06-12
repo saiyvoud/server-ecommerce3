@@ -67,14 +67,14 @@ export default class OrderController {
             }
             await FindOneUserId(userId);
             await FindOneAddressId(address_id); // ສ້າງຢູ່ service 
-            const image = req.files;
-            if (!image || !image.files) {
-                return SendError(res, 400, EMessage.BadRequest, "Files")
-            }
-            const img_url = await UploadImageToCloud(image.files.data, image.files.mimetype);
-            if (!img_url) {
-                return SendError(res, 404, EMessage.EUpload);
-            }
+            // const image = req.files;
+            // if (!image || !image.files) {
+            //     return SendError(res, 400, EMessage.BadRequest, "Files")
+            // }
+            // const img_url = await UploadImageToCloud(image.files.data, image.files.mimetype);
+            // if (!img_url) {
+            //     return SendError(res, 404, EMessage.EUpload);
+            // }
 
             const data = await prisma.order.create({
                 data: {
@@ -87,7 +87,7 @@ export default class OrderController {
                             address_id: address_id
                         }
                     },
-                    totalPrice: parseInt(totalPrice), bill: img_url
+                    totalPrice: parseInt(totalPrice),
                 }
             });
 

@@ -25,6 +25,17 @@ export default class AddressController {
             return SendError(res, 500, EMessage.ServerInternal, error)
         }
     }
+    static async SelectByUser(req, res) {
+        try {
+            const user_id = req.params.user_id;
+            const prisma = new PrismaClient();
+            const data = await prisma.address.findMany({ where: { userId: user_id } });
+            if (!data) return SendError(res, 404, EMessage.NotFound);
+            return SendSuccess(res, SMessage.SelectOne, data);
+        } catch (error) {
+            return SendError(res, 500, EMessage.ServerInternal, error)
+        }
+    }
     static async Insert(req, res) {
         try {
             const userId = req.user;

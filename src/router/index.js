@@ -19,7 +19,7 @@ router.put("/user/updateProfile", auth, UserController.UpdateProfile);
 router.put("/user/refresh", UserController.RefreshToken);
 router.delete("/user/delete/:user_id", auth, UserController.DeleteUserOne);
 //------ banner ----
-router.post("/banner/insert", auth, BannerController.Insert);
+router.post("/banner/insert",  BannerController.Insert);
 router.get("/banner/selAll", BannerController.SelectAll);
 router.get("/banner/selOne/:banner_id", BannerController.SelectOne);
 router.put("/banner/update/:banner_id", auth, BannerController.UpdateBanner);
@@ -42,6 +42,7 @@ router.delete("/product/delete/:product_id", auth, ProductController.DeleteProdu
 router.post("/address/insert", auth, AddressController.Insert);
 router.get("/address/selAll", AddressController.SelectAll);
 router.get("/address/selOne/:address_id", AddressController.SelectOne);
+router.get("/address/selBy/:user_id", AddressController.SelectByUser);
 router.put("/address/update/:address_id", auth, AddressController.UpdateAddress);
 router.delete("/address/delete/:address_id", auth, AddressController.DeleteAddress);
 //------ order ----
